@@ -1,6 +1,24 @@
 from flask import Flask, render_template
+from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
+
+# DB Configuration
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///sqlite-market.db'
+db = SQLAlchemy(app)
+
+
+# Creating the Item Model - python class that represents a database table.
+class Item(db.Model):
+    id = db.Column(db.Integer(), primary_key=True)
+    name = db.Column(db.String(length=20), nullable=False, unique=True)
+    price = db.Column(db.Integer(), nullable=False)
+    barcode = db.Column(db.String(length=12), nullable=False, unique=True)
+    description =  db.Column(db.String(length=1000), nullable=False, unique=True)
+
+    # shows he item’s name when printed (for debugging).
+    def __repr__(self):
+        return f'Item {self.name}'
 
 
 # two routes for single html file
@@ -13,11 +31,7 @@ def home_page():
 # market page route + sending data to templates
 @app.route('/market')
 def market_page():
-    items = [
-        {'id': 1, 'name': 'Phone', 'barcode': '893212299897', 'price': 500},
-        {'id': 2, 'name': 'Laptop', 'barcode': '123985473165', 'price': 900},
-        {'id': 3, 'name': 'Keyboard', 'barcode': '231985128446', 'price': 150}
-    ]
+    items = Item.query.all()  # Get all items from DB
     return render_template('market.html', item_name=items) # referenced w {{item_name}} in html
 
 
