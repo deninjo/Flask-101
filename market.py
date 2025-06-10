@@ -1,10 +1,19 @@
+import os
 from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 
-# DB Configuration
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///sqlite-market.db'
+
+# Get the MySQL password from an environment variable
+mysql_password = os.environ.get('MYSQL_PASSWORD')
+
+# mysql configuration
+app.config['SQLALCHEMY_DATABASE_URI'] = (
+    f'mysql+mysqlconnector://root:{mysql_password}@localhost:3306/market'
+)
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
 db = SQLAlchemy(app)
 
 
@@ -14,11 +23,11 @@ class Item(db.Model):
     name = db.Column(db.String(length=20), nullable=False, unique=True)
     price = db.Column(db.Integer(), nullable=False)
     barcode = db.Column(db.String(length=12), nullable=False, unique=True)
-    description =  db.Column(db.String(length=1000), nullable=False, unique=True)
+    description =  db.Column(db.String(length=1000), nullable=False)
 
-    # shows he item’s name when printed (for debugging).
+    # shows the item’s name when printed (for debugging).
     def __repr__(self):
-        return f'Item {self.name}'
+        return f'Item > {self.name}'
 
 
 # two routes for single html file
