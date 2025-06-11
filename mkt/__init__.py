@@ -17,6 +17,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = (
     f'mysql+mysqlconnector://root:{mysql_password}@localhost:3306/market'
 )
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SECRET_KEY'] = '5a740aa9280918d6a427e43c'
 
 db = SQLAlchemy(app)
 
