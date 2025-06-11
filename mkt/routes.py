@@ -1,3 +1,5 @@
+# contains decorator patterns - route funcs 
+
 from mkt import app
 from flask import render_template
 from mkt.models import Item
