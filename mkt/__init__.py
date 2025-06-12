@@ -5,6 +5,7 @@ import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
+from flask_login import LoginManager
 
 
 # creates the app object
@@ -22,10 +23,11 @@ app.config['SECRET_KEY'] = '5a740aa9280918d6a427e43c'
 
 db = SQLAlchemy(app)
 
-
 # to generate hashed passwords
 bcrypt = Bcrypt(app)
 
+# handles logins
+login_manager = LoginManager(app)
 
 #  register routes after app is created
 from mkt import routes
