@@ -2,8 +2,9 @@
 # Initializes the package, sets up Flask app and database
 
 import os
-from flask import Flask, render_template
+from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from flask_bcrypt import Bcrypt
 
 
 # creates the app object
@@ -20,6 +21,10 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = '5a740aa9280918d6a427e43c'
 
 db = SQLAlchemy(app)
+
+
+# to generate hashed passwords
+bcrypt = Bcrypt(app)
 
 
 #  register routes after app is created
