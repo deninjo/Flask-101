@@ -29,5 +29,9 @@ bcrypt = Bcrypt(app)
 # handles logins
 login_manager = LoginManager(app)
 
+# makes sure user logged in 2 view market page
+login_manager.login_view = "login_page"
+login_manager.login_message_category = "info"
+
 #  register routes after app is created
 from mkt import routes
