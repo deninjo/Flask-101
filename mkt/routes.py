@@ -35,7 +35,7 @@ def register_page():
         # after cr8ing acc automatically log them in
         login_user(user_to_create)
         flash(f"Account created successfully! You are now logged in as {user_to_create.username}", category='success')
-        
+
         return redirect(url_for('market_page'))
     
     if form.errors != {}: # If there are no errors from the validations
