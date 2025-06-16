@@ -1,9 +1,9 @@
 # contains decorator patterns - route funcs 
 
 from mkt import app
-from flask import render_template, redirect, url_for, flash
+from flask import render_template, redirect, url_for, flash, request
 from mkt.models import Item, User
-from mkt.forms import RegisterForm, LoginForm
+from mkt.forms import RegisterForm, LoginForm, PurchaseItemForm
 from mkt import db
 from flask_login import login_user, logout_user, login_required, current_user
 
@@ -15,12 +15,25 @@ def home_page():
 
 
 # market page route + sending data to templates
-@app.route('/market')
+@app.route('/market', methods=['GET', 'POST'])
 @login_required
 def market_page():
-    items = Item.query.all()  # Get all items from DB
-    return render_template('market.html', item_name=items) # referenced w {{item_name}} in html
+    purchase_form = PurchaseItemForm()
+    if request.method == "POST":
+        purchased_item = request.form.get('purchased_item')
+        p_item_object = Item.query.filter_by(name=purchased_item).first()
+        if p_item_object:
+            if current_user.can_purchase(p_item_object):
+                p_item_object.buy(current_user)
+                flash(f"Congratulations! You purchased {p_item_object.name} for {p_item_object.price}$", category='success')
+            else:
+                flash(f"Unfortunately, you don't have enough money to purchase {p_item_object.name}!", category='danger')
 
+        return redirect(url_for('market_page'))
+
+    if request.method == "GET":
+        items = Item.query.filter_by(owner=None)
+        return render_template('market.html', item_name=items, purchase_form=purchase_form)
 
 @app.route('/register', methods=['GET', 'POST'])
 def register_page():
